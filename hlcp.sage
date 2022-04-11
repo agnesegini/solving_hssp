@@ -56,20 +56,26 @@ def hlcp_attack(H,alg='default'):
   
         
   if alg in ['default','staistical']:
+      t=cputime()
       MO,tt1,tt10,tt1O= Step1(H.n,H.kappa,H.x0,H.a,H.X,H.b,H.m,BKZ=True)      
       tica, tt2, nrafound=statistical(MO,H.n,H.m,H.x0,H.X,H.a,H.b,H.kappa,H.B)
-      return  tt1, tica, tt2, nrafound, H
+      tttot=cputime(t)
+      return  tt1, tica, tt2, tttot ,nrafound, H
       
   if alg=='ns_original' or (alg=='ns' and H.m==2*n):
       print "Nguyen-Stern (Original) Attack"
+      t=cputime()
       MO,tt1,tt10,tt1O= Step1_original(H.n,H.kappa,H.x0,H.a,H.X,H.b,H.m)
       beta,tt2,nrafound=ns(H,MO,B)
-      return tt1,tt10,tt1O,beta,tt2, nrafound, H       
+      tttot=cputime(t)
+      return tt1,tt10,tt1O,beta,tt2,tttot , nrafound, H       
       
   if alg=='ns':
+      t=cputime()
       MO,tt1,tt10,tt1O= Step1(H.n,H.kappa,H.x0,H.a,H.X,H.b,H.m,BKZ=True)
       beta,tt2,nrafound=ns(H,MO,B)
-      return tt1,tt10,tt1O,beta,tt2,nrafound, H
+      tttot=cputime(t)
+      return tt1,tt10,tt1O,beta,tt2,tttot ,nrafound, H
 
   return  
   

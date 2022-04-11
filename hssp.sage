@@ -67,34 +67,43 @@ def hssp_attack(H,alg='default'):
     print
   if alg in ['default','multi']:
     assert H.m>(n^2+n)/2, 'm too small'
+    t=cputime()
     MO,tt1= Step1(H.n,H.kappa,H.x0,H.a,H.X,H.b,H.m,BKZ=False)
     print "\nMultivariate Attack"
     if kappa>0:
       tei, tef, tsf,tt2, nrafound=bit_guessing(H.n,H.kappa,MO,H.x0,H.a,H.X,H.b,H.m) 
-      return  tt1, tei, tef, tsf, tt2,nrafound, H
+      tttot=t=cputime(t)
+      return  tt1, tei, tef, tsf, tt2, tttot, nrafound, H
     else:
       tei, tef, tt2,nrafound=eigen(H.n,H.kappa,MO,H.x0,H.a,H.X,H.b,H.m) 
-      return  tt1, tei, tef, tt2,nrafound, H
+      tttot=t=cputime(t) 
+      return  tt1, tei, tef, tt2,tttot,nrafound, H
   
   if alg=='ns_original' or (alg=='ns' and H.m==2*n):
       print "Nguyen-Stern (Original) Attack"
+      t=cputime()
       MO,tt1,tt10,tt1O= Step1_original(H.n,H.kappa,H.x0,H.a,H.X,H.b,H.m)
       beta,tt2, nrafound=ns(H,MO)
-      return tt1,tt10,tt1O,beta,tt2, nrafound, H   
+      tttot=cputime(t)
+      return tt1,tt10,tt1O,beta,tt2, tttot,nrafound, H   
       
   if alg=='ns':
       MO,tt1,tt10,tt1O= Step1(H.n,H.kappa,H.x0,H.a,H.X,H.b,H.m,BKZ=True)
       print "\nNguyen-Stern (Improved) Attack"
+      t=cputime()
       beta,tt2, nrafound=ns(H,MO)
-      return tt1,tt10,tt1O,beta,tt2, nrafound, H
+      tttot=t=cputime(t)
+      return tt1,tt10,tt1O,beta,tt2, tttot,nrafound, H
      
       
   if alg=='statistical':
     assert kappa==-1, 'The statistical attack does not work for HSSP_n^kappa(m,Q)'
+    t=cputime()
     MO,tt1,tt10,tt1O= Step1(H.n,H.kappa,H.x0,H.a,H.X,H.b,H.m,BKZ=True)
     print "\nStatistical Attack"      
     tica, tt2, nrafound=statistical(MO,H.n,H.m,H.x0,H.X,H.a,H.b,H.kappa)
-    return  tt1, tica, tt2, nrafound, H
+    tttot=cputime(t)
+    return  tt1, tica, tt2,tttot, nrafound, H
   
   return None
   
