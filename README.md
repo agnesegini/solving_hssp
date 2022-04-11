@@ -69,7 +69,7 @@ For HLCP_n^kappa use:
 
 This generate the modulus H.x0, the weights vector H.a, the matrix H.x, the  sample vector H.b; kappa=-1 is HLCP_n by construction. 
 
-To run the attacks use hlcp_attack. If B=1, it calls hssp_attack
+To run the attacks use hlcp_attack. 
 
 >hlcp_attack(H,alg)
 
@@ -83,8 +83,10 @@ H is the instance to be attacked and alg is the algorithm to use :
 <li>if alg='ns' runs the Nguyen-Stern attack with the improved orthogonal lattice attack </li>
        
  </ul>
- 
+  
  Notice that for HLCP the multivariate attack is not avaliable.
+ 
+ Attention!! If B=1, it calls hssp_attack and 'default' is the mulivariate attack!
  
 ### Statistics
 
