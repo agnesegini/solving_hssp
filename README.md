@@ -35,3 +35,14 @@ H is the instance to be attacked and alg is the algorithm to use :
        
 <li>if alg='statistical' runs the heuristic statistical attack  </li>
  </ul>
+ 
+### Statistics
+To run experiments with HSSP_n and HSSP_n^k statHSSP use statHSSP() and statHSSPk(), respectively.
+
+> Lm=statHSSP()
+
+> Lns=statHSSP(A='ns',M=2,mi=70, ma=150)
+> 
+> print_stat(Lns) #this print the output in latex table form 
+
+
