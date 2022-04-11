@@ -39,7 +39,11 @@ H is the instance to be attacked and alg is the algorithm to use :
 ### Statistics
 To run experiments with HSSP_n and HSSP_n^k statHSSP use statHSSP() and statHSSPk(), respectively.
 
-> Lm=statHSSP()
+> L1=statHSSP()
+
+> L2=statHSSPk()
+
+print_stat produces more readable output
 
 > Lns=statHSSP(A='ns',M=2,mi=70, ma=150)
 > 
