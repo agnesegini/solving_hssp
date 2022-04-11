@@ -41,7 +41,7 @@ To run experiments with HSSP_n and HSSP_n^k statHSSP use statHSSP() and statHSSP
 
 > L1=statHSSP()
 
-For HSSpP_n^k specify the spasity sigma=kappa/n:
+For HSSpP_n^k specify the sparsity sigma=kappa/n:
 
 > L2=statHSSPk(sigma)
 
@@ -92,7 +92,7 @@ To run experiments with HLCP_{n,B} and HLCP_{n,B}^k statHLCP use statHLCP() and 
 
 > L1=statHLCP()
 
-For HLCP_{n,B}^k specify the spasity sigma=kappa/n:
+For HLCP_{n,B}^k specify the sparsity sigma=kappa/n:
 
 > L2=statHLCPk(sigma)
 
