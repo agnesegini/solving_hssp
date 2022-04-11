@@ -56,7 +56,7 @@ To work with HLCP instance open sage and load the hlcp.sage file
 
 > load("hlcp.sage")
 
-For HSSP_n use:
+For HLCP_n use:
 >H=hlcp(n,B) 
 >
 >H.gen_instance()
