@@ -86,7 +86,7 @@ H is the instance to be attacked and alg is the algorithm to use :
   
  Notice that for HLCP the multivariate attack is not avaliable.
  
- **Attention!!** If B=1, it calls hssp_attack and 'default' is the mulivariate attack!
+ **Attention!!** If B=1, hlcp_attack calls hssp_attack and 'default' is the mulivariate attack!
  
 ### Statistics
 
