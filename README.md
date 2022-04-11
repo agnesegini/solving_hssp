@@ -22,7 +22,7 @@ This generate the modulus H.x0, the weights vector H.a, the matrix H.x, the  sam
 
 To run the attacks use hssp_attack.    
 
->hssp_attack(H,alg='default')
+>hssp_attack(H,alg)
 
 H is the instance to be attacked and alg is the algorithm to use :
 
@@ -46,6 +46,55 @@ To run experiments with HSSP_n and HSSP_n^k statHSSP use statHSSP() and statHSSP
 print_stat produces more readable output
 
 > Lns=statHSSP(A='ns',M=2,mi=70, ma=150)
+> 
+> print_stat(Lns) #this print the output in latex table form 
+
+## HLCP
+To work with HLCP instance open sage and load the hlcp.sage file
+
+> load("hlcp.sage")
+
+For HSSP_n use:
+>H=hlcp(n,B) 
+>
+>H.gen_instance()
+
+For HLCP_n^kappa use:
+>H=hssp(n,B,kappa)
+>
+>H.gen_instance()
+
+
+This generate the modulus H.x0, the weights vector H.a, the matrix H.x, the  sample vector H.b; kappa=-1 is HLCP_n by construction. 
+
+To run the attacks use hlcp_attack. If B=1, it calls hssp_attack
+
+>hlcp_attack(H,alg)
+
+H is the instance to be attacked and alg is the algorithm to use :
+
+<ul>
+<li>if alg='default' or alg='statistical' runs the  heuristic statistical attack </li>
+       
+<li>if alg='ns_original' runs the original Nguyen-Stern attack </li>
+       
+<li>if alg='ns' runs the Nguyen-Stern attack with the improved orthogonal lattice attack </li>
+       
+ </ul>
+ 
+ Notice that for HLCP the multivariate attack is not avaliable.
+ 
+### Statistics
+
+To run experiments with HLCP_n and HLCP_n^k statHLCP use statHLCP() and statHLCPk(), respectively.
+
+> L1=statHLCP()
+
+> L2=statHLCPk()
+
+print_stat produces more readable output
+
+> Lns=statHLCP(A='ns',M=2,mi=70, ma=150)
 > 
 > print_stat(Lns) #this print the output in latex table form 
 
