@@ -41,7 +41,9 @@ To run experiments with HSSP_n and HSSP_n^k statHSSP use statHSSP() and statHSSP
 
 > L1=statHSSP()
 
-> L2=statHSSPk()
+For HSSpP_n^k specify the spasity sigma=kappa/n:
+
+> L2=statHSSPk(sigma)
 
 print_stat produces more readable output
 
@@ -86,16 +88,18 @@ H is the instance to be attacked and alg is the algorithm to use :
  
 ### Statistics
 
-To run experiments with HLCP_n and HLCP_n^k statHLCP use statHLCP() and statHLCPk(), respectively.
+To run experiments with HLCP_{n,B} and HLCP_{n,B}^k statHLCP use statHLCP() and statHLCPk(sigma), respectively.
 
 > L1=statHLCP()
 
-> L2=statHLCPk()
+For HLCP_{n,B}^k specify the spasity sigma=kappa/n:
+
+> L2=statHLCPk(sigma)
 
 print_stat produces more readable output
 
-> Lns=statHLCP(A='ns',M=2,mi=70, ma=150)
+> Ls=statHLCP(B=5,mi=70, ma=150)
 > 
-> print_stat(Lns) #this print the output in latex table form 
+> print_stat(Ls) #this print the output in latex table form 
 
 
