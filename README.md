@@ -2,3 +2,6 @@
 
 This repository the known attacks for solving HSSP and HLCP
 (work in progress)
+
+
+> H=hssp()
