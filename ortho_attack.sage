@@ -172,6 +172,7 @@ def Step1(n,v,x0,a,X,b,m,BKZ=False):
     mv=roundM(M[2*n:,:2*n]*M2i)
     if mv==0: break
     M[2*n:,:]-=mv*M[:2*n,:]
+  tsr=cputime(ts2)
   tt10=cputime(t)
   print "  Sred2:%.1f" % cputime(ts2),
   
@@ -207,8 +208,8 @@ def Step1(n,v,x0,a,X,b,m,BKZ=False):
   #print all(w in LX for w in MO.rows())
   
   del M,mv
-  if BKZ:return MO,tt1,tt10,tt1O
-  else: return MO, tt1
+  return MO,tt1,tt10,tt1O
+  #else: return MO, tt1
   
 
 

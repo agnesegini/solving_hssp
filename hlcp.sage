@@ -26,14 +26,14 @@ class hlcp:
     self.B=B
     
   def gen_instance(self,m=0):
-    if m<H.n:
-      m=choose_m(H.n,H.B)  
+    if m<self.n:
+      m=choose_m(self.n,self.B)  
     self.m=m
 
     print "n=",self.n,"m=",m,
     if self.kappa>-1: print "kappa=",self.kappa,
     iota=0.035
-    self.nx0=int(2*iota*H.n^2+H.n*log(H.n,2)+2*H.n*log(H.B,2))
+    self.nx0=int(2*iota*self.n^2+self.n*log(self.n,2)+2*self.n*log(self.B,2))
     print "nx0=",self.nx0
     self.x0,self.a,self.X,self.b=genParams(self.n, self.m,self.nx0,self.kappa,self.B)
     
@@ -56,26 +56,28 @@ def hlcp_attack(H,alg='default'):
   
         
   if alg in ['default','staistical']:
+      print "\nStatistical Attack" 
       t=cputime()
       MO,tt1,tt10,tt1O= Step1(H.n,H.kappa,H.x0,H.a,H.X,H.b,H.m,BKZ=True)      
       tica, tt2, nrafound=statistical(MO,H.n,H.m,H.x0,H.X,H.a,H.b,H.kappa,H.B)
       tttot=cputime(t)
-      return  tt1, tica, tt2, tttot ,nrafound, H
+      return  tt1, tica, tt2,tttot ,nrafound, H
       
   if alg=='ns_original' or (alg=='ns' and H.m==2*n):
       print "Nguyen-Stern (Original) Attack"
       t=cputime()
       MO,tt1,tt10,tt1O= Step1_original(H.n,H.kappa,H.x0,H.a,H.X,H.b,H.m)
-      beta,tt2,nrafound=ns(H,MO,B)
+      beta,tt2,nrafound,textra=ns(H,MO,B)
       tttot=cputime(t)
-      return tt1,tt10,tt1O,beta,tt2,tttot , nrafound, H       
+      return tt1,tt10,tt1O,beta,tt2,textra,tttot , nrafound, H       
       
   if alg=='ns':
+      print "\nNguyen-Stern (Improved) Attack"
       t=cputime()
       MO,tt1,tt10,tt1O= Step1(H.n,H.kappa,H.x0,H.a,H.X,H.b,H.m,BKZ=True)
-      beta,tt2,nrafound=ns(H,MO,B)
+      beta,tt2,nrafound,textra=ns(H,MO,B)
       tttot=cputime(t)
-      return tt1,tt10,tt1O,beta,tt2,tttot ,nrafound, H
+      return tt1,tt10,tt1O,beta,tt2,textra,tttot  ,nrafound, H
 
   return  
   

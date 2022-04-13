@@ -5,7 +5,7 @@ def is_cl(a,b,atol=0.01,rtol=1):
 def allpmones(v):
   return len([vj for vj in v if vj in [-1,0,1]])==len(v)
 
-def recoverBinary(M5):
+def recoverBinary(M5,kappa=-1):
   lv=[allones(vi) for vi in M5 if allones(vi)]
   
   n=M5.nrows()
@@ -27,7 +27,7 @@ def allones(v):
   return None
 
 def Step2_BKZ_binary(ke,n,m,x0,X,b,a):
-  if n>170: return
+ # if n>170: return
   beta=2
   tbk=cputime()
   while beta<n:
@@ -93,7 +93,8 @@ def recoverBounded(M5,B):
   
 from fpylll import BKZ
 
-def Step2_BKZ(ke,B,n,m,x0,X,b,a):
+def Step2_BKZ(ke,B,n,m,x0,X,b,a,kappa):
+  #if n>170: return
   beta=2
   tbk=cputime()
   while beta<n:
@@ -117,8 +118,8 @@ def Step2_BKZ(ke,B,n,m,x0,X,b,a):
   
   print "BKZ beta=%d: %.1f" % (beta,cputime(tbk)),
   t2=cputime()
-  #MB=recoverBinary(M5)
-  MB=recoverBounded(M5,B)
+  if B==1: MB=recoverBinary(M5,kappa)
+  else: MB=recoverBounded(M5,B)
   print "  Recovery: %.1f" % cputime(t2),
   print "  Number of recovered vector=",MB.nrows(),
   nfound=len([True for MBi in MB if MBi in X.T])
@@ -143,7 +144,7 @@ def ns(H,MO,B=1):
   
   
   t2=cputime()
-  NSo,beta=Step2_BKZ(matrix(MO,ZZ),B,H.n,H.m,H.x0,H.X,H.b,H.a)
+  NSo,beta=Step2_BKZ(matrix(MO,ZZ),B,H.n,H.m,H.x0,H.X,H.b,H.a,H.kappa)
   tt2=cputime(t2)
   
   print NSo.dimensions()
@@ -166,7 +167,10 @@ def ns(H,MO,B=1):
     else: NS=matrix(ZZ,li2)
     print NS.dimensions()
     Y=NS.T 
-    
+    assert Y.rank()==n, 'rank<n! extra binary vector to handle'   ## we have to fix this.
+  tt2=cputime(t2)  
+   
+  textra0=cputime()  
   if kappa!=-1 and B==1 and not unbalanced:
     ones=vector([1 for i in range(m)])
     li=NSo.rows()
@@ -237,7 +241,7 @@ def ns(H,MO,B=1):
     Y=NSo.T
     nfound=len([True for NSi in NSo if NSi in H.X.T])
     print "  NFound=",nfound,"out of",n,
-
+  
   invNSn=matrix(Integers(H.x0),Y[:n]).inverse()
   ra=invNSn*H.b[:n]
   nrafound=len([True for rai in ra if rai in H.a])  
@@ -255,6 +259,7 @@ def ns(H,MO,B=1):
     ra=invNSn*H.b[:n]
     nrafound=len([True for rai in ra if rai in H.a])
     print "  Coefs of a found=",nrafound,"out of",n
-     
+
+  textra=cputime(textra0)       
       
-  return beta,tt2,nrafound 
+  return beta,tt2,nrafound,textra

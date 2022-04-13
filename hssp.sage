@@ -36,7 +36,7 @@ class hssp:
       m=self.n*(self.n+3)/2 # n is odd
     elif m==0 and self.n % 2 ==0:
       m=self.n*(self.n+4)/2 # n is even
-    self.m=m
+    self.m=int(m)
     
     print "n=",self.n,"m=",m,
     if self.kappa>-1: print "kappa=",self.kappa,
@@ -68,32 +68,32 @@ def hssp_attack(H,alg='default'):
   if alg in ['default','multi']:
     assert H.m>(n^2+n)/2, 'm too small'
     t=cputime()
-    MO,tt1= Step1(H.n,H.kappa,H.x0,H.a,H.X,H.b,H.m,BKZ=False)
+    MO,tt1,tt10,tt1O= Step1(H.n,H.kappa,H.x0,H.a,H.X,H.b,H.m,BKZ=False)
     print "\nMultivariate Attack"
     if kappa>0:
       tei, tef, tsf,tt2, nrafound=bit_guessing(H.n,H.kappa,MO,H.x0,H.a,H.X,H.b,H.m) 
-      tttot=t=cputime(t)
-      return  tt1, tei, tef, tsf, tt2, tttot, nrafound, H
+      tttot=cputime(t)
+      return  tt1,tt10,tt1O, tei, tef, tsf, tt2, tttot, nrafound, H
     else:
       tei, tef, tt2,nrafound=eigen(H.n,H.kappa,MO,H.x0,H.a,H.X,H.b,H.m) 
-      tttot=t=cputime(t) 
-      return  tt1, tei, tef, tt2,tttot,nrafound, H
+      tttot=cputime(t) 
+      return  tt1,tt10,tt1O, tei, tef, tt2,tttot,nrafound, H
   
   if alg=='ns_original' or (alg=='ns' and H.m==2*n):
       print "Nguyen-Stern (Original) Attack"
       t=cputime()
       MO,tt1,tt10,tt1O= Step1_original(H.n,H.kappa,H.x0,H.a,H.X,H.b,H.m)
-      beta,tt2, nrafound=ns(H,MO)
+      beta,tt2, nrafound,textra=ns(H,MO)
       tttot=cputime(t)
-      return tt1,tt10,tt1O,beta,tt2, tttot,nrafound, H   
+      return tt1,tt10,tt1O,beta,tt2,textra, tttot,nrafound, H   
       
   if alg=='ns':
-      MO,tt1,tt10,tt1O= Step1(H.n,H.kappa,H.x0,H.a,H.X,H.b,H.m,BKZ=True)
-      print "\nNguyen-Stern (Improved) Attack"
       t=cputime()
-      beta,tt2, nrafound=ns(H,MO)
-      tttot=t=cputime(t)
-      return tt1,tt10,tt1O,beta,tt2, tttot,nrafound, H
+      print "\nNguyen-Stern (Improved) Attack"
+      MO,tt1,tt10,tt1O= Step1(H.n,H.kappa,H.x0,H.a,H.X,H.b,H.m,BKZ=True)
+      beta,tt2, nrafound,textra=ns(H,MO)
+      tttot=cputime(t)
+      return tt1,tt10,tt1O,beta,tt2, textra ,tttot,nrafound, H
      
       
   if alg=='statistical':
@@ -108,7 +108,7 @@ def hssp_attack(H,alg='default'):
   return None
   
   
-def statHSSP(mi=70, ma=150, M=0,A='default'):
+def statHSSP(mi=70, ma=150, M=0,A='default',tablepr=True):
   L=[]
   for n in range(mi,ma,20):
     print
@@ -116,10 +116,10 @@ def statHSSP(mi=70, ma=150, M=0,A='default'):
     H.gen_instance(m=M*n)
     L+=[hssp_attack(H,A)]
     print 
-    print L
+    if tablepr: print print_stat(L)
   return L 
   
-def statHSSPk(sigma,mi=70, ma=150, M=0,A='default'):
+def statHSSPk(sigma,mi=70, ma=150, M=0,A='default',tablepr=True):
   L=[]
   for n in range(mi,ma,20):
     print
@@ -128,7 +128,7 @@ def statHSSPk(sigma,mi=70, ma=150, M=0,A='default'):
     H.gen_instance(m=M*n)
     L+=[hssp_attack(H,A)]
     print 
-    print L
+    if tablepr: print print_stat(L)
   return L 
   
 def print_stat(L):

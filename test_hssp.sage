@@ -1,6 +1,6 @@
 load("hssp.sage")
 
-n=90
+n=80
 H=hssp(n,-1)
 H.gen_instance()
 Lm=hssp_attack(H)
