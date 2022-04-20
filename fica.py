@@ -11,13 +11,13 @@ def ICA(X,B=1,n=16,kappa=-1,exn=0):
   ica=FastICA(n_components=ncomp,fun='cube')
   S_=ica.fit_transform(X.T)
   A_ = ica.mixing_
-  assert np.allclose(X.T, np.dot(S_, A_.T) + ica.mean_)
+  #assert np.allclose(X.T, np.dot(S_, A_.T) + ica.mean_)
 
   # we want to remove the mean
   s0=np.dot(ica.mean_,np.linalg.inv(A_.T))
   S_+=s0
 
-  assert np.allclose(X, np.dot(A_,S_.T))  # now the mean is 0
+  #assert np.allclose(X, np.dot(A_,S_.T))  # now the mean is 0
 
   # we want that the components of S_ are positive
   # if the average of a column of S_ is negative, we take the opposite
@@ -26,7 +26,7 @@ def ICA(X,B=1,n=16,kappa=-1,exn=0):
   S_*=Sm
   A_*=Sm
 
-  assert np.allclose(X, np.dot(A_,S_.T))
+  #assert np.allclose(X, np.dot(A_,S_.T))
 
   # we want that the components of S_ are 0 or 1
   # If all the components of S_ are 0 or 1, the standard deviation will be 1/2

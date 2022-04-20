@@ -24,7 +24,7 @@ def runICA_A(MOn,B=1,n=16,kappa=-1):
 def statistical(MO,n,m,x0,X,a,b,kappa,B=1,variant=None):
   
   if variant==None:
-    if n<=170: variant='roundA'
+    if n<=250: variant='roundA'
     else: variant='roundX'
 
   print "Step 2-ICA: ", variant
@@ -42,8 +42,8 @@ def statistical(MO,n,m,x0,X,a,b,kappa,B=1,variant=None):
     try:
       S2=A2.inverse()*MO
       print "mathNbits A=",matNbits(A2),
-    except: 
-      return 0,0
+    except:
+      return 0,0,0 
   elif variant=="roundX":
     S2=runICA(MOn,B)
     print "mathNbits X=",matNbits(X),
@@ -65,7 +65,7 @@ def statistical(MO,n,m,x0,X,a,b,kappa,B=1,variant=None):
   if nfound<n: 
     print
     print
-    return tica,nfound
+    return tica, 0 ,nfound
 
   NS=S2.T
   
@@ -81,5 +81,5 @@ def statistical(MO,n,m,x0,X,a,b,kappa,B=1,variant=None):
   tS2=tcf+tica
   print "  Total step2: %.1f" % tS2,
   
-  return tica,tS2, nfound
+  return tica, tS2, nrafound
 

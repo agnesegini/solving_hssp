@@ -23,3 +23,14 @@ assert Lnso[-2]==n
 Lns=hlcp_attack(H,'ns')
 assert Lns[-2]==n
 print "\n\n--------------------------->HLCP_{n,B}^kappa Test: success!\n"
+
+
+kappa=n//2
+H=hlcp(n,B,kappa)
+H.gen_instance()
+Lm=hlcp_attack(H)
+assert Lm[-2]==n
+assert Lnso[-2]==n
+Lns=hlcp_attack(H,'ns')
+assert Lns[-2]==n
+print "\n\n--------------------------->HLCP_{n,B}^kappa Test: success!\n"

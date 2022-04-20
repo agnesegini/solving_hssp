@@ -36,7 +36,7 @@ def orthoLatticeMod(b,n,x0):
  
 
 def choose_m(n,B):
-    if n<150:
+    if n<=150:
     	m=n^2*(int(log(B,2))+1)
     else: 
     	m=n^2*B
@@ -50,24 +50,25 @@ def genParams(n=10,m=20,nx0=100,v=5,B=1):
 
   # We generate the alpha_i's
   a=vector(ZZ,n)
-  for i in range(n):
+  for i in xrange(n):
     a[i]=mod(ZZ.random_element(x0),x0)
 
   # The matrix X has m rows and must be of rank n
   if v>0:
     while True:
       X=Matrix(ZZ,m,n)
-      for i in range(m):
+      for i in xrange(m):
         Lin=gen_list(n, v) 
         for j in Lin:
           X[i,j]=ZZ.random_element(1,B+1)
+        del Lin
       print X.rank()
       if X.rank()==n: break
   else:
     while True:
       X=Matrix(ZZ,m,n)
-      for i in range(m):
-        for j in range(n):
+      for i in xrange(m):
+        for j in xrange(n):
           X[i,j]=ZZ.random_element(B+1)
       print X.rank()    
       if X.rank()==n: break

@@ -46,10 +46,17 @@ class hlcp:
 def hlcp_attack(H,alg='default'):
   # If B=1, it calls hssp_attack so actually in this case.
   if H.B==1: return  hssp_attack(H,alg)
+
   
-  print "Random instance of HLCP_(n,B)^kappa(m,Q)"
-  print "n=",H.n, "B=",H.B, "kappa=",H.kappa,"m=",H.m, "log(Q)=", H.nx0 
-  print
+  if H.kappa!=-1:
+    print "Random instance of HLCP_(n,B)^kappa(m,Q)"
+    print "n=",H.n, "B=",H.B, "kappa=",H.kappa,"m=",H.m, "log(Q)=", H.nx0 
+    print
+  else:
+    print "Random instance of HLCP_n(m,Q)"
+    print "n=",H.n, "B=",H.B,"m=",H.m, "log(Q)=", H.nx0 
+    print
+  
   kappa=H.kappa
   n=H.n
   B=H.B
