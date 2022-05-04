@@ -24,7 +24,7 @@ def runICA_A(MOn,B=1,n=16,kappa=-1):
 def statistical(MO,n,m,x0,X,a,b,kappa,B=1,variant=None):
   
   if variant==None:
-    if n<=250: variant='roundA'
+    if n<=200: variant='roundA'
     else: variant='roundX'
 
   print "Step 2-ICA: ", variant

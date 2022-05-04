@@ -133,6 +133,8 @@ def Step1_plus_gen(n,v,m=0,BKZ=False):
 
 def Step1(n,v,x0,a,X,b,m,BKZ=False):
   k=4
+  if n>200: k=5
+  print "Building M ",
   M=orthoLatticeMod(b,n,x0)
   print "Step 1",
   t=cputime()
