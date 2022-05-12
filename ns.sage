@@ -93,7 +93,7 @@ def recoverBounded(M5,B):
   
 from fpylll import BKZ
 
-def Step2_BKZ(ke,B,n,m,x0,X,b,a,kappa):
+def Step2_BKZ(ke,B,n,m,x0,X,b,a,kappa,original=False):
   #if n>170: return
   beta=2
   tbk=cputime()
@@ -103,19 +103,21 @@ def Step2_BKZ(ke,B,n,m,x0,X,b,a,kappa):
       M5=ke.LLL()
       M5=M5[:n]  # this is for the affine case
     else:
-      M5=M5.BKZ(block_size=beta, strategies=BKZ.DEFAULT_STRATEGY, flags=BKZ.AUTO_ABORT|BKZ.GH_BND)
-#      M5=M5.BKZ(block_size=beta)
+#      M5=M5.BKZ(block_size=beta, strategies=BKZ.DEFAULT_STRATEGY, flags=BKZ.AUTO_ABORT|BKZ.GH_BND)
+      M5=M5.BKZ(block_size=beta)
     
-    # we succeed if we only get vectors with {-1,0,1} components
+    # we succeed if we only get vectors with {-1,0,1} components, for kappa>0 we relax this condition to all except one vector
     #if len([True for v in M5 if allpmones(v)])==n: break
-    if len([True for v in M5 if allbounded(v,B)])==n: break
-
+    cl=len([True for v in M5 if allbounded(v,B)])
+    if cl==n: break
+    #if kappa>0 and cl==n-1: break
 
     if beta==2:
       beta=10
     else:
       beta+=10
-  
+  for v in M5:  
+    if not allbounded(v,B): print v
   print "BKZ beta=%d: %.1f" % (beta,cputime(tbk)),
   t2=cputime()
   if B==1: MB=recoverBinary(M5,kappa)
@@ -131,9 +133,107 @@ def Step2_BKZ(ke,B,n,m,x0,X,b,a,kappa):
   #ra=invNSn*b[:n]
   #nrafound=len([True for rai in ra if rai in a])
   #print "  Coefs of a found=",nrafound,"out of",n,
-  print "  Total step2: %.1f" % cputime(tbk),
+  print "  Total BKZ: %.1f" % cputime(tbk),
 
   return MB,beta
+
+def ns_original(H,MO):
+  B=1
+  #m=int(max(2*n,16*log(n,2)))
+  kappa=H.kappa
+  n=H.n
+  m=H.m
+ 
+  bb=1/2
+  unbalanced=(abs(n*bb-kappa)/n > 0.2)
+  print 'unbalanced: ', unbalanced  
+  
+  t2=cputime()
+  NSo,beta=Step2_BKZ(matrix(MO,ZZ),B,H.n,H.m,H.x0,H.X,H.b,H.a,H.kappa,original=True)
+  tt2=cputime(t2)
+  
+  print NSo.dimensions()
+  assert NSo.nrows()>=n-1, 'error Step2--not enough vector found' 
+  
+
+  
+  if kappa>0 and B==1 and unbalanced:
+    li2=NSo.rows()
+    if len(li2)<n:
+      ones=vector([1 for i in range(m)])
+      if kappa > n/2: 
+        missing=(n-kappa)*ones-sum(li2)
+        NS=matrix(ZZ,[ones-x for x in li2+[missing]])
+      else: 
+        missing=(kappa)*ones-sum(li2)
+        NS=matrix(ZZ,li2+[missing]) 
+    else: NS=matrix(ZZ,li2)
+    print NS.dimensions()
+    Y=NS.T 
+    assert Y.rank()==n, 'rank<n! extra binary vector to handle'   ## we have to fix this.
+  tt2=cputime(t2)  
+   
+  textra0=cputime()  
+  if kappa!=-1 and B==1 and not unbalanced:
+    ones=vector([1 for i in range(m)])
+    li=NSo.rows()
+    for NSi in NSo:
+      if ones-NSi not in li:
+        li.append(ones-NSi)
+    li2=[]
+    for r in li:
+      if ones-r not in li2:
+        li2.append(r)
+    if len(li2)<n and ones not in li2:
+      li2=[ones] +li2  
+    assert len(li2)==n
+    
+    NS=matrix(ZZ,li2)
+    thereisones= ones in li2
+    print "ones in NS: ", thereisones   
+    ts=cputime()
+   
+    if thereisones:  
+      wm=sum([xi for xi in Y if xi!=ones])
+      k0=max(wm)
+      wm=k0*ones-wm      
+      jone=(Y.rows()).index(ones)
+      Y[jone]=wm
+    assert v1==0 
+    if k0==n-kappa: 
+      for j in range(n): Y[j]=ned(Y[j])
+    
+    nyfound=len([True for y in Y if y in H.X.T])
+    print "  NFound=",nyfound,"out of",n, 
+    
+    Y=Y.T
+  elif not unbalanced or kappa==-1:
+    Y=NSo.T
+    nfound=len([True for NSi in NSo if NSi in H.X.T])
+    print "  NFound=",nfound,"out of",n,
+  
+  invNSn=matrix(Integers(H.x0),Y[:n]).inverse()
+  ra=invNSn*H.b[:n]
+  nrafound=len([True for rai in ra if rai in H.a])  
+  
+  print "  Total step2: %.1f" % cputime(t2),
+  print "  Coefs of a found=",nrafound,"out of",n
+
+  if kappa==n/2 and nyfound==0:
+    print "\n-->Reverse"
+    nyfound=len([True for y in Y.T if ones - y in H.X.T])
+    print "  NFound=",nyfound,"out of",n,
+    O=ones_matrix(ZZ,*Y.dimensions())
+    Y=O-Y
+    invNSn=matrix(Integers(H.x0),Y[:n]).inverse()
+    ra=invNSn*H.b[:n]
+    nrafound=len([True for rai in ra if rai in H.a])
+    print "  Coefs of a found=",nrafound,"out of",n
+
+  textra=cputime(textra0)       
+      
+  return beta,tt2,nrafound,textra
+
 
 
 def ns(H,MO,B=1):

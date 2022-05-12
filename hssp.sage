@@ -81,9 +81,14 @@ def hssp_attack(H,alg='default'):
   
   if alg=='ns_original' or (alg=='ns' and H.m==2*n):
       print "Nguyen-Stern (Original) Attack"
+      bb=1/2
+      unbalanced=(abs(n*bb-kappa)/n > 0.2)
+      if kappa>0 and not unbalanced:
+        print 'ns not applicable'
+        return
       t=cputime()
       MO,tt1,tt10,tt1O= Step1_original(H.n,H.kappa,H.x0,H.a,H.X,H.b,H.m)
-      beta,tt2, nrafound,textra=ns(H,MO)
+      beta,tt2, nrafound,textra=ns_original(H,MO)
       tttot=cputime(t)
       return tt1,tt10,tt1O,beta,tt2,textra, tttot,nrafound, H   
       
