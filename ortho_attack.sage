@@ -216,7 +216,7 @@ def Step1(n,v,x0,a,X,b,m,BKZ=False):
 
 
 # We generate the lattice of vectors orthogonal to b modulo x0
-# and also to c in the affine case
+
 def orthoLattice(b,x0):
  m=b.length()
  M=Matrix(ZZ,m,m)
