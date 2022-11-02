@@ -100,6 +100,6 @@ print_stat produces more readable output
 
 > Ls=statHLCP(B=5,mi=70, ma=150)
 > 
-> print_stat(Ls) #this print the output in latex table form 
+> print_stat(Ls) #this prints the output in latex table form 
 
 
